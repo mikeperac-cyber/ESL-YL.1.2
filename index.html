@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ English Match Day! — Speaking Adventure</title>
+<style>
+  :root{
+    --pitch:#1B7A43; --grass:#2FA35C; --night:#12233D;
+    --kit-yellow:#FFC93C; --card-red:#E4572E;
+    --paper:#F2F7F3; --white:#FFFFFF; --ink:#1C2B24; --soft:#DCEBE0;
+    --purple:#6C4AB6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;padding-bottom:70px;}
+
+  /* ---------- SCOREBOARD ---------- */
+  #scoreboard{position:sticky;top:0;z-index:50;background:var(--night);color:var(--white);box-shadow:0 3px 10px rgba(0,0,0,.25);}
+  .score-row{display:flex;align-items:center;justify-content:space-around;padding:8px 10px;gap:8px;}
+  .stat{text-align:center;}
+  .stat .num{background:var(--kit-yellow);color:var(--night);font-weight:bold;font-size:1.05rem;padding:2px 12px;border-radius:10px;display:inline-block;min-width:58px;}
+  .stat .lbl{font-size:.65rem;letter-spacing:1px;opacity:.85;display:block;margin-top:2px;}
+  #level-badge{background:var(--purple);color:var(--white);font-size:.8rem;font-weight:bold;padding:4px 12px;border-radius:20px;}
+  #xp-bar-wrap{height:7px;background:#0B1728;}
+  #xp-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--kit-yellow),#FF9F1C);transition:width .4s ease;}
+
+  /* ---------- TABS ---------- */
+  #tabs{display:flex;background:var(--white);border-bottom:3px solid var(--soft);position:sticky;top:64px;z-index:49;}
+  .tab-btn{flex:1;padding:13px 8px;background:var(--white);color:#7A8A7F;border-radius:0;font-size:.95rem;border-bottom:4px solid transparent;}
+  .tab-btn.active{color:var(--pitch);border-bottom-color:var(--kit-yellow);background:var(--paper);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;animation:pop .3s ease;}
+
+  /* ---------- HERO ---------- */
+  header.hero{background:linear-gradient(160deg,var(--pitch) 0%,var(--grass) 100%);color:var(--white);text-align:center;padding:38px 20px 48px;position:relative;overflow:hidden;}
+  header.hero::before,header.hero::after{content:"";position:absolute;border:3px solid rgba(255,255,255,.25);border-radius:50%;}
+  header.hero::before{width:220px;height:220px;left:-80px;top:-80px;}
+  header.hero::after{width:300px;height:300px;right:-120px;bottom:-160px;}
+  header.hero h1{font-size:clamp(1.6rem,6vw,2.5rem);margin-bottom:10px;position:relative;}
+  header.hero p{max-width:520px;margin:0 auto 8px;position:relative;font-size:1.02rem;}
+  header.hero.extra{background:linear-gradient(160deg,var(--purple) 0%,#8E6FD8 100%);}
+  .kickoff-btn{display:inline-block;margin-top:14px;background:var(--kit-yellow);color:var(--night);font-weight:bold;text-decoration:none;padding:12px 26px;border-radius:30px;font-size:1rem;box-shadow:0 4px 0 #C99A1E;position:relative;}
+  .kickoff-btn:active{transform:translateY(3px);box-shadow:none;}
+
+  main{max-width:760px;margin:0 auto;padding:0 14px;}
+  section{background:var(--white);border-radius:18px;padding:24px 18px;margin:22px 0;box-shadow:0 2px 8px rgba(18,35,61,.08);}
+  .eyebrow{display:inline-block;background:var(--soft);color:var(--pitch);font-size:.72rem;font-weight:bold;letter-spacing:1.5px;padding:4px 12px;border-radius:20px;text-transform:uppercase;margin-bottom:8px;}
+  .eyebrow.purple{background:#E8E0F7;color:var(--purple);}
+  h2{color:var(--pitch);font-size:1.4rem;margin-bottom:6px;}
+  .extra-panel h2{color:var(--purple);}
+  .subtitle{color:#5C6E63;font-size:.95rem;margin-bottom:16px;}
+  .tr-hint{color:#7A8A7F;font-size:.85rem;font-style:italic;}
+  .xp-tag{background:#E8E0F7;color:var(--purple);font-size:.75rem;font-weight:bold;padding:3px 10px;border-radius:12px;}
+
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:12px;font-size:.92rem;font-weight:bold;padding:10px 16px;transition:transform .1s,background .15s;}
+  button:active{transform:scale(.96);}
+  .btn-green{background:var(--pitch);color:var(--white);}
+  .btn-green:hover{background:var(--grass);}
+  .btn-yellow{background:var(--kit-yellow);color:var(--night);}
+  .btn-purple{background:var(--purple);color:var(--white);}
+  .btn-outline{background:var(--white);color:var(--pitch);border:2px solid var(--pitch);}
+  .btn-outline-p{background:var(--white);color:var(--purple);border:2px solid var(--purple);}
+
+  /* ---------- VOCAB ---------- */
+  .vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;}
+  .vocab-card{background:var(--paper);border:2px solid var(--soft);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;}
+  .vocab-card .word{font-size:1.12rem;font-weight:bold;color:var(--night);}
+  .vocab-card .tr{color:var(--card-red);font-size:.9rem;font-weight:bold;}
+  .vocab-card .ex{font-size:.87rem;color:#41544A;}
+  .vocab-card .speak-tip{margin-top:auto;font-size:.8rem;background:var(--white);border-radius:10px;padding:6px 8px;border:1px dashed var(--grass);color:var(--pitch);}
+
+  /* ---------- MATCH GAME ---------- */
+  .match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:480px;margin:0 auto;}
+  .match-item{background:var(--white);border:2px solid var(--soft);border-radius:12px;padding:11px 8px;font-size:.9rem;font-weight:bold;color:var(--night);text-align:center;}
+  .match-item.sel{border-color:var(--kit-yellow);background:#FFF6DE;}
+  .match-item.done{background:#D9F2E1;border-color:var(--grass);color:var(--pitch);cursor:default;opacity:.75;}
+  .match-item.shake{animation:shake .3s;border-color:var(--card-red);}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+
+  /* ---------- PROMPTS ---------- */
+  .prompt{border:2px solid var(--soft);border-radius:14px;padding:14px;margin-bottom:12px;background:var(--paper);}
+  .prompt .starter{font-size:1.03rem;font-weight:bold;color:var(--night);margin-bottom:8px;}
+  .model{display:none;margin-top:10px;background:var(--white);border-left:4px solid var(--kit-yellow);padding:10px 12px;border-radius:0 10px 10px 0;font-size:.92rem;}
+  .model.show{display:block;animation:pop .25s ease;}
+  @keyframes pop{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ---------- SPINNER ---------- */
+  #spinner-box{background:linear-gradient(135deg,var(--night),#23406B);border-radius:14px;padding:20px;text-align:center;color:var(--white);margin-bottom:16px;}
+  #spin-result{min-height:56px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:bold;margin:12px 0;background:rgba(255,255,255,.1);border-radius:12px;padding:10px;}
+  #spin-result.rolling{animation:blink .12s infinite;}
+  @keyframes blink{50%{opacity:.4;}}
+
+  .story{background:var(--paper);border-radius:14px;padding:18px;font-size:1.01rem;border:2px solid var(--soft);}
+  .story p{margin-bottom:12px;}
+
+  .quiz-q{margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--soft);}
+  .quiz-q:last-child{border-bottom:none;}
+  .quiz-q .qtext{font-weight:bold;margin-bottom:8px;}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .options button{text-align:left;background:var(--paper);border:2px solid var(--soft);color:var(--ink);font-weight:normal;}
+  .options button.correct{background:#D9F2E1;border-color:var(--grass);color:var(--pitch);font-weight:bold;}
+  .options button.wrong{background:#FBE3DC;border-color:var(--card-red);color:var(--card-red);}
+  .feedback{font-size:.88rem;margin-top:6px;min-height:1.2em;font-weight:bold;}
+
+  .sound-block{background:var(--paper);border-radius:14px;padding:14px;margin-bottom:12px;border-left:6px solid var(--kit-yellow);}
+  .sound-block h3{color:var(--night);margin-bottom:4px;font-size:1.02rem;}
+  .sound-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+  .chip{background:var(--white);border:2px solid var(--soft);border-radius:20px;padding:5px 14px;font-size:.9rem;cursor:pointer;font-weight:bold;color:var(--night);}
+  .chip:hover{border-color:var(--grass);}
+
+  /* ---------- PENALTY GAME ---------- */
+  #game-wrap{background:linear-gradient(180deg,var(--pitch),var(--grass));border-radius:14px;padding:20px 14px;color:var(--white);}
+  #game-wrap h3{text-align:center;margin-bottom:4px;}
+  #game-score{text-align:center;font-size:1.02rem;margin-bottom:14px;}
+  .ball-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:420px;margin:0 auto;}
+  .ball{aspect-ratio:1;border-radius:50%;background:var(--white);color:var(--night);display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:bold;font-size:1.6rem;cursor:pointer;border:4px solid var(--night);transition:transform .15s;user-select:none;}
+  .ball:hover{transform:scale(1.06);}
+  .ball.done{background:var(--kit-yellow);border-color:#C99A1E;font-size:1.8rem;cursor:default;}
+  #game-question{display:none;background:var(--white);color:var(--ink);border-radius:14px;padding:16px;margin-top:16px;text-align:center;}
+  #game-question.show{display:block;animation:pop .25s ease;}
+  #game-question .q{font-size:1.03rem;font-weight:bold;margin-bottom:6px;}
+  #game-question .hint{font-size:.85rem;color:#5C6E63;margin-bottom:12px;}
+  #goal-banner{display:none;text-align:center;font-size:1.5rem;font-weight:bold;color:var(--kit-yellow);margin-top:12px;text-shadow:1px 1px 0 var(--night);}
+  #goal-banner.show{display:block;animation:goal .5s ease;}
+  @keyframes goal{0%{transform:scale(.4);opacity:0;}60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+
+  .dialogue{background:var(--paper);border-radius:14px;padding:14px;border:2px solid var(--soft);margin-bottom:10px;}
+  .line{margin-bottom:8px;font-size:.95rem;}
+  .line .who{font-weight:bold;color:var(--pitch);}
+  .line .who.b{color:var(--card-red);}
+  .blank{display:inline-block;min-width:90px;border-bottom:2px dashed var(--card-red);color:var(--card-red);font-weight:bold;text-align:center;}
+  .practice{display:none;margin-top:10px;}
+  .practice.show{display:block;animation:pop .25s ease;}
+
+  /* ---------- SENTENCE BUILDER ---------- */
+  #sb-target{min-height:52px;background:var(--white);border:3px dashed var(--purple);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center;}
+  #sb-pool{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+  .sb-word{background:#E8E0F7;color:var(--purple);border:2px solid var(--purple);border-radius:10px;padding:8px 14px;font-weight:bold;font-size:.95rem;cursor:pointer;user-select:none;}
+  #sb-target .sb-word{background:var(--purple);color:var(--white);}
+  #sb-status{font-weight:bold;min-height:1.4em;margin-bottom:8px;}
+  .sb-progress{font-size:.85rem;color:#7A8A7F;margin-bottom:10px;}
+
+  /* ---------- SCRAMBLE ---------- */
+  #scr-word{font-size:1.9rem;letter-spacing:6px;font-weight:bold;color:var(--purple);text-align:center;margin:12px 0;}
+  #scr-input{width:100%;max-width:320px;display:block;margin:0 auto 12px;padding:12px;font-size:1.1rem;border:2px solid var(--purple);border-radius:12px;text-align:center;font-family:inherit;}
+  #scr-clue{text-align:center;color:#7A8A7F;font-size:.9rem;margin-bottom:8px;}
+  #scr-status{text-align:center;font-weight:bold;min-height:1.4em;margin-bottom:8px;}
+  .center{text-align:center;}
+
+  /* ---------- MEMORY ---------- */
+  #mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:460px;margin:0 auto;}
+  .mem-card{aspect-ratio:3/2.4;background:var(--purple);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:bold;font-size:.82rem;cursor:pointer;text-align:center;padding:4px;user-select:none;transition:transform .15s;}
+  .mem-card:hover{transform:scale(1.04);}
+  .mem-card.flip{background:var(--white);color:var(--night);border:2px solid var(--purple);}
+  .mem-card.found{background:#D9F2E1;color:var(--pitch);border:2px solid var(--grass);cursor:default;transform:none;}
+  #mem-status{text-align:center;font-weight:bold;margin-top:12px;min-height:1.4em;}
+
+  /* ---------- SPEED SPEAK ---------- */
+  #speed-box{background:linear-gradient(135deg,#B3261E,#E4572E);border-radius:14px;padding:20px;text-align:center;color:var(--white);}
+  #speed-timer{font-size:3rem;font-weight:bold;margin:8px 0;}
+  #speed-prompt{background:rgba(255,255,255,.15);border-radius:12px;padding:12px;font-size:1.05rem;font-weight:bold;margin-bottom:14px;min-height:52px;display:flex;align-items:center;justify-content:center;}
+
+  /* ---------- BADGES ---------- */
+  #badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:10px;}
+  .badge{background:var(--paper);border:2px solid var(--soft);border-radius:14px;padding:12px 6px;text-align:center;filter:grayscale(1);opacity:.45;}
+  .badge.won{filter:none;opacity:1;background:#FFF6DE;border-color:var(--kit-yellow);animation:goal .5s ease;}
+  .badge .icon{font-size:1.7rem;}
+  .badge .name{font-size:.7rem;font-weight:bold;margin-top:4px;color:var(--night);}
+
+  .check-list{list-style:none;}
+  .check-list li{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;border:2px solid var(--soft);font-size:1rem;}
+  .check-list li .box{width:26px;height:26px;border-radius:8px;border:2px solid var(--pitch);display:flex;align-items:center;justify-content:center;background:var(--white);flex-shrink:0;}
+  .check-list li.checked{background:#D9F2E1;border-color:var(--grass);}
+  .check-list li.checked .box{background:var(--pitch);color:var(--white);}
+  #final-msg{display:none;text-align:center;background:var(--night);color:var(--white);border-radius:14px;padding:22px;margin-top:16px;font-size:1.05rem;}
+  #final-msg.show{display:block;animation:goal .5s ease;}
+  #final-msg .big{font-size:1.8rem;margin-bottom:8px;}
+
+  /* ---------- TOAST + CONFETTI ---------- */
+  #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--night);color:var(--white);padding:12px 22px;border-radius:30px;font-weight:bold;font-size:.95rem;z-index:100;transition:transform .35s ease;box-shadow:0 4px 16px rgba(0,0,0,.3);text-align:center;max-width:90vw;}
+  #toast.show{transform:translateX(-50%) translateY(0);}
+  .confetti{position:fixed;top:-20px;font-size:1.4rem;z-index:99;animation:fall linear forwards;pointer-events:none;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg);}}
+
+  footer{text-align:center;color:#7A8A7F;font-size:.8rem;padding:20px;}
+  @media(max-width:480px){
+    .vocab-grid{grid-template-columns:1fr 1fr;}
+    .vocab-card .ex,.vocab-card .speak-tip{display:none;}
+    .vocab-card.open .ex,.vocab-card.open .speak-tip{display:block;}
+    #mem-grid{grid-template-columns:repeat(3,1fr);}
+    #tabs{top:66px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- SCOREBOARD -->
+<div id="scoreboard">
+  <div class="score-row">
+    <div class="stat"><span class="num"><span id="total-goals">0</span> ⚽</span><span class="lbl">GOALS</span></div>
+    <div class="stat"><span id="level-badge">🌱 Rookie</span><span class="lbl">LEVEL</span></div>
+    <div class="stat"><span class="num"><span id="total-xp">0</span> ⭐</span><span class="lbl">XP</span></div>
+  </div>
+  <div id="xp-bar-wrap"><div id="xp-bar"></div></div>
+</div>
+
+<!-- TABS -->
+<div id="tabs">
+  <button class="tab-btn active" id="tabbtn-1" onclick="showTab(1)">⚽ Match Day</button>
+  <button class="tab-btn" id="tabbtn-2" onclick="showTab(2)">⏱️ Extra Time</button>
+</div>
+
+<!-- ================= TAB 1 : MATCH DAY ================= -->
+<div class="tab-panel active" id="tab-1">
+
+<header class="hero">
+  <h1>⚽ English Match Day!</h1>
+  <p>Welcome, star player! 🌟 Today you learn new words, read a cool story, and <strong>speak a lot of English</strong>.</p>
+  <p>Win <strong>⭐ XP</strong> in every game, level up from 🌱 Rookie to 👑 Legend, and collect all the 🏅 badges!</p>
+  <p class="tr-hint">İpucu: Yüksek sesle konuş! Hata yapmak normaldir. 💪</p>
+  <a href="#vocab" class="kickoff-btn">▶ KICK OFF!</a>
+</header>
+
+<main>
+
+<!-- VOCABULARY -->
+<section id="vocab">
+  <span class="eyebrow">Warm-up · Isınma</span>
+  <h2>🎒 Vocabulary Warm-Up</h2>
+  <p class="subtitle">Read each word and say the example sentence <strong>out loud, 2 times</strong>. On a phone, tap a card to see more. Then play the Word Match game below! ⬇️</p>
+  <div class="vocab-grid" id="vocab-grid"></div>
+</section>
+
+<!-- WORD MATCH GAME -->
+<section id="wordmatch">
+  <span class="eyebrow">Game 1 · Oyun 1</span>
+  <h2>🎯 Word Match Challenge <span class="xp-tag">+5 ⭐ each pair</span></h2>
+  <p class="subtitle">Tap an English word, then tap its Turkish meaning. Match all 6 pairs to win a badge! 🏅</p>
+  <div class="match-cols" id="match-cols"></div>
+  <p class="feedback center" id="match-status"></p>
+  <p class="center"><button class="btn-outline" onclick="resetMatch()">🔄 Play again (new words)</button></p>
+</section>
+
+<!-- SPEAKING -->
+<section id="speaking">
+  <span class="eyebrow">Speaking · Konuşma</span>
+  <h2>🎤 Speaking Practice</h2>
+  <p class="subtitle">Spin the Question Machine! Answer <strong>out loud in a full sentence</strong>, then spin again. Every spin gives you ⭐!</p>
+
+  <div id="spinner-box">
+    <p style="font-size:.9rem;opacity:.85;">🎰 QUESTION MACHINE 🎰</p>
+    <div id="spin-result">Press SPIN to get your first question!</div>
+    <button class="btn-yellow" onclick="spinPrompt()">🎰 SPIN! <span class="xp-tag" style="background:rgba(255,255,255,.9);">+3 ⭐</span></button>
+    <p style="font-size:.8rem;margin-top:8px;opacity:.8;">Spins: <span id="spin-count">0</span> / 8 — answer each one out loud!</p>
+  </div>
+
+  <p class="subtitle">Or practice one by one and check the model answers:</p>
+  <div id="prompts"></div>
+</section>
+
+<!-- READING -->
+<section id="reading">
+  <span class="eyebrow">Reading · Okuma</span>
+  <h2>📖 Mini Story: Emre's Holiday</h2>
+  <p class="subtitle">Read the story. If you like, read it out loud — that is great speaking practice too!</p>
+  <div class="story">
+    <p>Emre is eleven years old. In August, he goes on holiday with his family. They travel to Antalya by bus. The journey is long, but Emre listens to music and looks at the sea.</p>
+    <p>Every morning, Emre plays football on the beach with new friends. He is a fast striker, and he scores two goals on the first day! In the afternoon, he swims in the sea and eats ice cream.</p>
+    <p>One evening, the family goes to a restaurant. Emre tries a new food: grilled fish with salad. First he thinks, "I don't like fish." But it is delicious! He eats everything and says, "Thank you, it was great!"</p>
+    <p>At night, Emre calls his grandmother. "Today I played football, I swam, and I tried new food," he says. "This is the best holiday ever!"</p>
+  </div>
+</section>
+
+<!-- COMPREHENSION -->
+<section id="quiz">
+  <span class="eyebrow">Check · Kontrol</span>
+  <h2>🧠 Reading Questions <span class="xp-tag">+10 ⭐ first try!</span></h2>
+  <p class="subtitle">Part 1: Tap the correct answer. Correct on your <strong>first try</strong> = 10 ⭐, second try = 5 ⭐. Part 2: Answer <strong>out loud</strong>.</p>
+
+  <h3 style="color:var(--night);margin-bottom:10px;">Part 1 — Choose the answer</h3>
+  <div id="mcq"></div>
+
+  <h3 style="color:var(--night);margin:18px 0 10px;">Part 2 — Speak your answer 🎤 <span class="xp-tag">+5 ⭐ each</span></h3>
+  <div id="speak-qs"></div>
+</section>
+
+<!-- PRONUNCIATION -->
+<section id="pron">
+  <span class="eyebrow">Sounds · Sesler</span>
+  <h2>🗣️ Pronunciation Power</h2>
+  <p class="subtitle">These sounds are tricky for Turkish speakers — but you can do it! Say each word <strong>3 times, slowly then fast</strong>. Tap a word to hear it (if your device can speak). 🔊</p>
+
+  <div class="sound-block">
+    <h3>The "th" sound 👅</h3>
+    <p>Put your tongue softly between your teeth and blow air. It is NOT "t" and NOT "s"!</p>
+    <div class="sound-words">
+      <span class="chip" onclick="speak('thanks')">thanks 🔊</span>
+      <span class="chip" onclick="speak('three')">three 🔊</span>
+      <span class="chip" onclick="speak('think')">think 🔊</span>
+      <span class="chip" onclick="speak('birthday')">birthday 🔊</span>
+    </div>
+  </div>
+  <div class="sound-block">
+    <h3>The "w" sound 👄</h3>
+    <p>Make your lips a small round circle, like a kiss, then open: "wuh". It is NOT "v"!</p>
+    <div class="sound-words">
+      <span class="chip" onclick="speak('water')">water 🔊</span>
+      <span class="chip" onclick="speak('we')">we 🔊</span>
+      <span class="chip" onclick="speak('window')">window 🔊</span>
+      <span class="chip" onclick="speak('sandwich')">sandwich 🔊</span>
+    </div>
+  </div>
+  <div class="sound-block">
+    <h3>Strong final sounds 💥</h3>
+    <p>Don't lose the last sound! Say the end of the word clearly: foo<strong>D</strong>, playe<strong>D</strong>, like<strong>T</strong>.</p>
+    <div class="sound-words">
+      <span class="chip" onclick="speak('food')">food 🔊</span>
+      <span class="chip" onclick="speak('played')">played 🔊</span>
+      <span class="chip" onclick="speak('liked')">liked 🔊</span>
+      <span class="chip" onclick="speak('bag')">bag 🔊</span>
+    </div>
+  </div>
+  <p><button class="btn-green" onclick="oneTimeXP('pron', 10, this, '🗣️ Pronunciation done!')">✅ I practiced the sounds! (+10 ⭐)</button></p>
+</section>
+
+<!-- PENALTY GAME -->
+<section id="game">
+  <span class="eyebrow">Game 2 · Oyun 2</span>
+  <h2>🏆 Penalty Shootout: Speak &amp; Score! <span class="xp-tag">+10 ⭐ per goal</span></h2>
+  <p class="subtitle">Tap a ball to get a challenge. Answer <strong>out loud in English</strong>, then press GOAL! Score all 6 for the Hat-Trick badge! 🏅</p>
+  <div id="game-wrap">
+    <h3>⚽ PENALTY TIME ⚽</h3>
+    <p id="game-score">Goals: <strong><span id="game-goals">0</span> / 6</strong></p>
+    <div class="ball-grid" id="balls"></div>
+    <div id="game-question">
+      <p class="q" id="gq-text"></p>
+      <p class="hint" id="gq-hint"></p>
+      <button class="btn-yellow" id="gq-goal-btn">⚽ GOOOAL! I answered!</button>
+    </div>
+    <p id="goal-banner">⚽ GOOOOOAL!!! 🎉</p>
+  </div>
+</section>
+
+<!-- ROLEPLAY -->
+<section id="roleplay">
+  <span class="eyebrow">Roleplay · Canlandırma</span>
+  <h2>🎭 Daily Life Roleplay</h2>
+  <p class="subtitle">First, read the dialogue out loud (you can play both people!). Then press <strong>Practice</strong> and say the missing words yourself.</p>
+
+  <h3 style="color:var(--night);margin-bottom:8px;">🍔 Roleplay 1: Ordering food on holiday</h3>
+  <div class="dialogue">
+    <p class="line"><span class="who">Waiter:</span> Hello! What would you like?</p>
+    <p class="line"><span class="who b">You:</span> Hi! I would like a chicken sandwich, please.</p>
+    <p class="line"><span class="who">Waiter:</span> Anything to drink?</p>
+    <p class="line"><span class="who b">You:</span> Yes, water please. How much is it?</p>
+    <p class="line"><span class="who">Waiter:</span> It's 90 lira.</p>
+    <p class="line"><span class="who b">You:</span> Here you are. Thank you!</p>
+  </div>
+  <button class="btn-outline" onclick="togglePractice('prac1', this)">🎤 Practice with blanks</button>
+  <div class="practice" id="prac1">
+    <div class="dialogue" style="margin-top:10px;">
+      <p class="line"><span class="who">Waiter:</span> Hello! What would you like?</p>
+      <p class="line"><span class="who b">You:</span> Hi! I would like <span class="blank">your food</span>, please.</p>
+      <p class="line"><span class="who">Waiter:</span> Anything to drink?</p>
+      <p class="line"><span class="who b">You:</span> Yes, <span class="blank">your drink</span> please. How much is it?</p>
+      <p class="line"><span class="who">Waiter:</span> It's 90 lira.</p>
+      <p class="line"><span class="who b">You:</span> <span class="blank">say goodbye!</span></p>
+    </div>
+    <p class="tr-hint">Boşluklara kendi cevabını yüksek sesle söyle! 🎤</p>
+  </div>
+
+  <h3 style="color:var(--night);margin:20px 0 8px;">⚽ Roleplay 2: Talking about football with a new friend</h3>
+  <div class="dialogue">
+    <p class="line"><span class="who">Friend:</span> Hi! Do you like football?</p>
+    <p class="line"><span class="who b">You:</span> Yes, I love football! I play every day.</p>
+    <p class="line"><span class="who">Friend:</span> Cool! What is your favorite team?</p>
+    <p class="line"><span class="who b">You:</span> My favorite team is Galatasaray. What about you?</p>
+    <p class="line"><span class="who">Friend:</span> I like Real Madrid. What position do you play?</p>
+    <p class="line"><span class="who b">You:</span> I am a striker. I love scoring goals!</p>
+  </div>
+  <button class="btn-outline" onclick="togglePractice('prac2', this)">🎤 Practice with blanks</button>
+  <div class="practice" id="prac2">
+    <div class="dialogue" style="margin-top:10px;">
+      <p class="line"><span class="who">Friend:</span> Hi! Do you like football?</p>
+      <p class="line"><span class="who b">You:</span> Yes, I <span class="blank">...</span>! I play <span class="blank">when?</span>.</p>
+      <p class="line"><span class="who">Friend:</span> Cool! What is your favorite team?</p>
+      <p class="line"><span class="who b">You:</span> My favorite team is <span class="blank">team</span>. What about you?</p>
+      <p class="line"><span class="who">Friend:</span> I like Real Madrid. What position do you play?</p>
+      <p class="line"><span class="who b">You:</span> I am a <span class="blank">position</span>. I love <span class="blank">...ing</span>!</p>
+    </div>
+    <p class="tr-hint">Kendi takımını ve pozisyonunu söyle! 🎤</p>
+  </div>
+
+  <p style="margin-top:14px;"><button class="btn-green" onclick="oneTimeXP('roleplay', 10, this, '🎭 Roleplays done!')">✅ I did the roleplays! (+10 ⭐)</button></p>
+</section>
+
+<!-- BADGES + FINAL REVIEW -->
+<section id="review">
+  <span class="eyebrow">Full time · Maç sonu</span>
+  <h2>🏅 Your Badges</h2>
+  <p class="subtitle">Play the games to unlock them all!</p>
+  <div id="badges"></div>
+
+  <h2 style="margin-top:24px;">🏁 Final Review</h2>
+  <p class="subtitle">Tap everything you did today:</p>
+  <ul class="check-list" id="checklist">
+    <li onclick="toggleCheck(this)"><span class="box"></span> I learned new words. 🎒</li>
+    <li onclick="toggleCheck(this)"><span class="box"></span> I read a story. 📖</li>
+    <li onclick="toggleCheck(this)"><span class="box"></span> I answered questions. 🧠</li>
+    <li onclick="toggleCheck(this)"><span class="box"></span> I spoke English. 🎤</li>
+    <li onclick="toggleCheck(this)"><span class="box"></span> I tried my best. 💪</li>
+  </ul>
+  <div id="final-msg">
+    <p class="big">🏆 MAN OF THE MATCH! 🏆</p>
+    <p>Amazing work! Every time you speak English, you get stronger — just like training for football. Now go to <strong>⏱️ Extra Time</strong> for bonus games! ⚽✨</p>
+    <p class="tr-hint" style="color:#B8C6D8;margin-top:8px;">Harikasın! Ekstra oyunlar için Extra Time sekmesine geç. 👏</p>
+    <p style="margin-top:12px;"><button class="btn-yellow" onclick="showTab(2)">⏱️ Go to Extra Time!</button></p>
+  </div>
+</section>
+
+</main>
+</div><!-- /tab-1 -->
+
+<!-- ================= TAB 2 : EXTRA TIME ================= -->
+<div class="tab-panel extra-panel" id="tab-2">
+
+<header class="hero extra">
+  <h1>⏱️ Extra Time!</h1>
+  <p>The match is not over! 🔥 Here are bonus games: build sentences, unscramble words, test your memory, read a new story, and beat the 30-second Speed Speak challenge!</p>
+  <p class="tr-hint" style="color:#EFE8FF;">Bonus bölüm: Daha çok oyun, daha çok ⭐!</p>
+</header>
+
+<main>
+
+<!-- SENTENCE BUILDER -->
+<section id="builder">
+  <span class="eyebrow purple">Bonus game 1</span>
+  <h2>🧩 Sentence Builder <span class="xp-tag">+10 ⭐ each</span></h2>
+  <p class="subtitle">Tap the words in the correct order to build the sentence. Then <strong>read your sentence out loud!</strong> Tap a word in the box to remove it.</p>
+  <p class="sb-progress">Sentence <span id="sb-num">1</span> / 6 · Solved: <span id="sb-solved">0</span></p>
+  <div id="sb-target"></div>
+  <div id="sb-pool"></div>
+  <p id="sb-status"></p>
+  <button class="btn-purple" onclick="checkSentence()">✅ Check my sentence</button>
+  <button class="btn-outline-p" onclick="clearSentence()">🔄 Clear</button>
+</section>
+
+<!-- WORD SCRAMBLE -->
+<section id="scramble">
+  <span class="eyebrow purple">Bonus game 2</span>
+  <h2>🔤 Word Scramble <span class="xp-tag">+8 ⭐ each</span></h2>
+  <p class="subtitle">The letters are mixed up! Type the correct word, then <strong>say it out loud 2 times</strong>.</p>
+  <p class="sb-progress center">Word <span id="scr-num">1</span> / 6 · Solved: <span id="scr-solved">0</span></p>
+  <p id="scr-clue"></p>
+  <p id="scr-word"></p>
+  <input id="scr-input" type="text" autocomplete="off" autocapitalize="off" placeholder="Type the word...">
+  <p id="scr-status"></p>
+  <p class="center">
+    <button class="btn-purple" onclick="checkScramble()">✅ Check</button>
+    <button class="btn-outline-p" onclick="scrambleHint()">💡 Hint (first letter)</button>
+  </p>
+</section>
+
+<!-- MEMORY MATCH -->
+<section id="memory">
+  <span class="eyebrow purple">Bonus game 3</span>
+  <h2>🃏 Memory Match <span class="xp-tag">+5 ⭐ per pair</span></h2>
+  <p class="subtitle">Find the English–Turkish pairs! Tap two cards. When you find a pair, <strong>say the English word out loud</strong>.</p>
+  <div id="mem-grid"></div>
+  <p id="mem-status"></p>
+  <p class="center"><button class="btn-outline-p" onclick="buildMemory()">🔄 Shuffle &amp; play again</button></p>
+</section>
+
+<!-- BONUS READING -->
+<section id="reading2">
+  <span class="eyebrow purple">Bonus reading</span>
+  <h2>📖 Story 2: The Big Match</h2>
+  <p class="subtitle">A new story! Read it, then answer the quick-fire questions below.</p>
+  <div class="story">
+    <p>It is Saturday, and today is the big match! Emre's team, the Blue Lions, plays against the Red Eagles. Emre wakes up early, eats a big breakfast, and puts on his blue shirt with the number 10.</p>
+    <p>The first half is difficult. The Red Eagles score one goal, and the Blue Lions are sad. At half-time, the coach says, "Don't give up! Play together and run fast!"</p>
+    <p>In the second half, Emre gets the ball. He runs past two players and passes to his friend Mert. Mert scores! One–one! Then, in the last minute, Emre shoots... GOAL! The Blue Lions win 2–1!</p>
+    <p>After the match, the team eats pizza together. "Football is better with friends," Emre says with a big smile.</p>
+  </div>
+
+  <h3 style="color:var(--night);margin:16px 0 10px;">⚡ Quick-Fire Quiz <span class="xp-tag">+10 ⭐ first try</span></h3>
+  <div id="mcq2"></div>
+
+  <div class="prompt" style="margin-top:12px;">
+    <p class="starter">🎤 Speak: What does the coach say at half-time?</p>
+    <button class="btn-outline-p" onclick="toggleModel2(this,'m2a')">💡 Check answer</button>
+    <div class="model" id="m2a">✨ The coach says, "Don't give up! Play together and run fast!"</div>
+  </div>
+  <div class="prompt">
+    <p class="starter">🎤 Speak: What do they do after the match?</p>
+    <button class="btn-outline-p" onclick="toggleModel2(this,'m2b')">💡 Check answer</button>
+    <div class="model" id="m2b">✨ After the match, the team eats pizza together.</div>
+  </div>
+</section>
+
+<!-- SPEED SPEAK -->
+<section id="speedspeak">
+  <span class="eyebrow purple">Final boss</span>
+  <h2>⚡ Speed Speak: 30-Second Challenge <span class="xp-tag">+15 ⭐</span></h2>
+  <p class="subtitle">Press START and speak in English about the topic for <strong>30 seconds without stopping</strong>. Small mistakes are OK — just keep talking! You can do it 3 times with different topics.</p>
+  <div id="speed-box">
+    <p style="font-size:.9rem;opacity:.9;">🔥 TOPIC 🔥</p>
+    <div id="speed-prompt">Press START to get your topic!</div>
+    <div id="speed-timer">30</div>
+    <button class="btn-yellow" id="speed-btn" onclick="startSpeed()">▶ START!</button>
+    <p style="font-size:.8rem;margin-top:10px;opacity:.85;">Challenges done: <span id="speed-done">0</span> / 3</p>
+  </div>
+</section>
+
+<!-- EXTRA TIME FINISH -->
+<section>
+  <span class="eyebrow purple">Well done</span>
+  <h2>🎉 Extra Time Complete?</h2>
+  <p class="subtitle">Check your badges and score at the top! If you unlocked new badges, go back to <strong>⚽ Match Day → Your Badges</strong> to see them shine.</p>
+  <p><button class="btn-purple" onclick="showTab(1)">⚽ Back to Match Day</button></p>
+</section>
+
+</main>
+</div><!-- /tab-2 -->
+
+<footer>Made for you by your English coach · Works offline · Speak loud, be proud! 🎤</footer>
+
+<div id="toast"></div>
+
+<script>
+/* ================= DATA ================= */
+var vocab = [
+  {w:"striker", tr:"forvet", ex:"Emre is a fast striker.", tip:"Say it: 'I am a striker!'"},
+  {w:"score a goal", tr:"gol atmak", ex:"I want to score a goal today.", tip:"Say it: 'I score goals!'"},
+  {w:"team", tr:"takım", ex:"My team wears red and yellow.", tip:"Say your favorite team's name!"},
+  {w:"match", tr:"maç", ex:"The match starts at five o'clock.", tip:"Say it: 'I watch the match.'"},
+  {w:"delicious", tr:"çok lezzetli", ex:"This pizza is delicious!", tip:"Say it with a happy face! 😋"},
+  {w:"try new food", tr:"yeni yemek denemek", ex:"On holiday, I try new food.", tip:"Say a food you want to try!"},
+  {w:"grilled fish", tr:"ızgara balık", ex:"Emre eats grilled fish.", tip:"Say it: 'I like grilled fish.'"},
+  {w:"ice cream", tr:"dondurma", ex:"I eat ice cream at the beach.", tip:"Say your favorite flavor!"},
+  {w:"journey", tr:"yolculuk", ex:"The journey to Antalya is long.", tip:"Say it: 'The journey is fun.'"},
+  {w:"beach", tr:"plaj", ex:"We play football on the beach.", tip:"Say it: 'I love the beach!'"},
+  {w:"swim", tr:"yüzmek", ex:"I swim in the sea every day.", tip:"Say it: 'I can swim!'"},
+  {w:"holiday", tr:"tatil", ex:"My holiday is in August.", tip:"Say where you go on holiday!"},
+  {w:"wake up", tr:"uyanmak", ex:"I wake up at eight o'clock.", tip:"Say your real wake-up time!"},
+  {w:"usually", tr:"genellikle", ex:"I usually play football after school.", tip:"Say it: 'I usually...' + your idea!"}
+];
+
+var prompts = [
+  {s:"I like...", m:"I like football and video games. I also like pizza!"},
+  {s:"I want to...", m:"I want to score a goal in the next match."},
+  {s:"My favorite food is...", m:"My favorite food is köfte, but I also love ice cream."},
+  {s:"My favorite team is...", m:"My favorite team is Galatasaray. They play very well."},
+  {s:"I usually...", m:"I usually wake up at seven and go to school."},
+  {s:"On holiday, I...", m:"On holiday, I swim in the sea and play on the beach."},
+  {s:"After school, I...", m:"After school, I do my homework and then play football."},
+  {s:"At the weekend, I...", m:"At the weekend, I visit my grandmother and watch a match."},
+  {s:"I can...", m:"I can run fast and I can swim. I can also cook eggs!"},
+  {s:"My best friend...", m:"My best friend is Ali. We play football together every day."}
+];
+
+var mcqs = [
+  {q:"1. Where does Emre go on holiday?", opts:["Ankara","Antalya","İzmir"], a:1},
+  {q:"2. How many goals does Emre score on the first day?", opts:["One","Two","Three"], a:1},
+  {q:"3. What new food does Emre try?", opts:["Grilled fish","Pizza","Chicken sandwich"], a:0}
+];
+
+var mcqs2 = [
+  {q:"1. What is the name of Emre's team?", opts:["The Red Eagles","The Blue Lions","The Green Tigers"], a:1},
+  {q:"2. What is the final score?", opts:["1–1","2–1","3–0"], a:1},
+  {q:"3. Who scores the first goal for the Blue Lions?", opts:["Emre","The coach","Mert"], a:2}
+];
+
+var speakQs = [
+  {q:"4. How does Emre travel to Antalya? 🎤", m:"He travels to Antalya by bus."},
+  {q:"5. What does Emre do every morning? 🎤", m:"Every morning, he plays football on the beach."},
+  {q:"6. Who does Emre call at night? 🎤", m:"At night, he calls his grandmother."}
+];
+
+var gameQs = [
+  {q:"Say 3 foods you like — in full sentences!", h:"Example: I like pizza. I like köfte. I like apples."},
+  {q:"Tell me about your morning. Say 2 sentences.", h:"Example: I wake up at seven. I eat breakfast with my family."},
+  {q:"Describe your favorite footballer.", h:"Example: He is fast. He scores many goals. He plays for..."},
+  {q:"You are on holiday! Say 3 things you do.", h:"Example: I swim, I play football, and I eat ice cream."},
+  {q:"Count from 1 to 10 in English — fast!", h:"One, two, three... Go go go! ⚡"},
+  {q:"Say one thing you tried for the first time.", h:"Example: I tried grilled fish. It was delicious!"}
+];
+
+var sentences = [
+  ["I","play","football","every","day"],
+  ["My","favorite","food","is","pizza"],
+  ["We","go","on","holiday","in","August"],
+  ["He","scores","a","goal","in","the","match"],
+  ["I","usually","wake","up","at","seven"],
+  ["She","tries","new","food","at","the","beach"]
+];
+
+var scrambles = [
+  {w:"STRIKER", c:"⚽ forvet"},
+  {w:"HOLIDAY", c:"🏖️ tatil"},
+  {w:"DELICIOUS", c:"😋 çok lezzetli"},
+  {w:"JOURNEY", c:"🚌 yolculuk"},
+  {w:"BREAKFAST", c:"🍳 kahvaltı"},
+  {w:"USUALLY", c:"🕐 genellikle"}
+];
+
+var memPairs = [
+  ["beach","plaj"],["swim","yüzmek"],["team","takım"],
+  ["match","maç"],["wake up","uyanmak"],["ice cream","dondurma"]
+];
+
+var speedTopics = [
+  "Talk about your favorite football team! ⚽",
+  "Talk about your perfect holiday! 🏖️",
+  "Talk about food you love and food you hate! 🍕"
+];
+
+var badgeDefs = [
+  {id:"first", icon:"⚽", name:"First Goal"},
+  {id:"match", icon:"🎯", name:"Word Wizard"},
+  {id:"quiz", icon:"🧠", name:"Quiz Master"},
+  {id:"hattrick", icon:"🏆", name:"Hat-Trick"},
+  {id:"builder", icon:"🧩", name:"Sentence Star"},
+  {id:"scramble", icon:"🔤", name:"Spell Champ"},
+  {id:"memory", icon:"🃏", name:"Memory Master"},
+  {id:"speed", icon:"⚡", name:"Speed Speaker"},
+  {id:"fulltime", icon:"🏁", name:"Full Time"}
+];
+
+var levels = [
+  {xp:0, name:"🌱 Rookie"},
+  {xp:60, name:"⭐ Star Player"},
+  {xp:140, name:"🥇 Captain"},
+  {xp:240, name:"👑 Legend"}
+];
+
+/* ================= STATE / CORE ================= */
+var totalXP = 0, totalGoals = 0, once = {}, badges = {};
+
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+function confetti(){
+  var emo = ["🎉","⭐","⚽","✨","🏆"];
+  for(var i=0;i<18;i++){
+    var s = document.createElement('span');
+    s.className = 'confetti';
+    s.textContent = emo[Math.floor(Math.random()*emo.length)];
+    s.style.left = (Math.random()*100)+'vw';
+    s.style.animationDuration = (1.6+Math.random()*1.6)+'s';
+    document.body.appendChild(s);
+    (function(el){ setTimeout(function(){ el.remove(); }, 3500); })(s);
+  }
+}
+
+function currentLevel(){
+  var lv = levels[0];
+  levels.forEach(function(l){ if(totalXP >= l.xp) lv = l; });
+  return lv;
+}
+
+function addXP(n){
+  var before = currentLevel().name;
+  totalXP += n;
+  document.getElementById('total-xp').textContent = totalXP;
+  var lv = currentLevel();
+  document.getElementById('level-badge').textContent = lv.name;
+  var idx = levels.indexOf(lv);
+  var next = levels[idx+1];
+  var pct = next ? Math.min(100,((totalXP-lv.xp)/(next.xp-lv.xp))*100) : 100;
+  document.getElementById('xp-bar').style.width = pct+'%';
+  if(lv.name !== before){
+    confetti();
+    showToast("🆙 LEVEL UP! You are now: "+lv.name);
+  }
+}
+
+function addGoal(){
+  totalGoals++;
+  document.getElementById('total-goals').textContent = totalGoals;
+  if(totalGoals === 1) winBadge('first');
+}
+
+function oneTimeXP(key, xp, btn, msg){
+  if(once[key]) return;
+  once[key] = true;
+  addXP(xp); addGoal();
+  if(btn){ btn.textContent = "⚽ GOAL! +"+xp+" ⭐ 🎉"; btn.style.background = "var(--kit-yellow)"; btn.style.color = "var(--night)"; }
+  showToast(msg+" +"+xp+" ⭐");
+}
+
+function winBadge(id){
+  if(badges[id]) return;
+  badges[id] = true;
+  var el = document.getElementById('badge-'+id);
+  if(el) el.classList.add('won');
+  var def = badgeDefs.find(function(b){ return b.id===id; });
+  confetti();
+  showToast("🏅 Badge unlocked: "+def.icon+" "+def.name+"!");
+}
+
+/* build badge grid */
+var bWrap = document.getElementById('badges');
+badgeDefs.forEach(function(b){
+  var d = document.createElement('div');
+  d.className = 'badge'; d.id = 'badge-'+b.id;
+  d.innerHTML = '<div class="icon">'+b.icon+'</div><div class="name">'+b.name+'</div>';
+  bWrap.appendChild(d);
+});
+
+/* ================= TABS ================= */
+function showTab(n){
+  [1,2].forEach(function(i){
+    document.getElementById('tab-'+i).classList.toggle('active', i===n);
+    document.getElementById('tabbtn-'+i).classList.toggle('active', i===n);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ================= VOCAB CARDS ================= */
+var vg = document.getElementById('vocab-grid');
+vocab.forEach(function(v){
+  var d = document.createElement('div');
+  d.className = 'vocab-card';
+  d.innerHTML = '<span class="word">'+v.w+'</span><span class="tr">🇹🇷 '+v.tr+'</span>'+
+    '<span class="ex">"'+v.ex+'"</span><span class="speak-tip">🎤 '+v.tip+'</span>';
+  d.onclick = function(){ d.classList.toggle('open'); };
+  vg.appendChild(d);
+});
+
+/* ================= WORD MATCH GAME ================= */
+var matchSel = null, matchFound = 0, matchPairs = [];
+function shuffle(a){ return a.slice().sort(function(){ return Math.random()-.5; }); }
+
+function resetMatch(){
+  matchSel = null; matchFound = 0;
+  matchPairs = shuffle(vocab).slice(0,6);
+  var wrap = document.getElementById('match-cols');
+  wrap.innerHTML = '';
+  var left = shuffle(matchPairs), right = shuffle(matchPairs);
+  var col1 = [], col2 = [];
+  left.forEach(function(p){ col1.push({t:p.w, k:p.w, side:'en'}); });
+  right.forEach(function(p){ col2.push({t:p.tr, k:p.w, side:'tr'}); });
+  for(var i=0;i<6;i++){
+    [col1[i], col2[i]].forEach(function(item){
+      var b = document.createElement('button');
+      b.className = 'match-item';
+      b.textContent = (item.side==='en'?'🇬🇧 ':'🇹🇷 ')+item.t;
+      b.dataset.key = item.k; b.dataset.side = item.side;
+      b.onclick = function(){ tapMatch(b); };
+      wrap.appendChild(b);
+    });
+  }
+  document.getElementById('match-status').textContent = '';
+}
+
+function tapMatch(b){
+  if(b.classList.contains('done')) return;
+  if(!matchSel){ matchSel = b; b.classList.add('sel'); return; }
+  if(matchSel === b){ b.classList.remove('sel'); matchSel = null; return; }
+  if(matchSel.dataset.side === b.dataset.side){
+    matchSel.classList.remove('sel'); matchSel = b; b.classList.add('sel'); return;
+  }
+  var a = matchSel; matchSel = null; a.classList.remove('sel');
+  if(a.dataset.key === b.dataset.key){
+    a.classList.add('done'); b.classList.add('done');
+    matchFound++; addXP(5);
+    document.getElementById('match-status').textContent = "✅ Pair "+matchFound+"/6! Say the English word out loud! 🎤";
+    document.getElementById('match-status').style.color = "var(--pitch)";
+    if(matchFound === 6){
+      addGoal(); winBadge('match');
+      document.getElementById('match-status').textContent = "🏆 All 6 pairs! You are a Word Wizard!";
+    }
+  } else {
+    a.classList.add('shake'); b.classList.add('shake');
+    setTimeout(function(){ a.classList.remove('shake'); b.classList.remove('shake'); }, 350);
+    document.getElementById('match-status').textContent = "❌ Not a pair — try again!";
+    document.getElementById('match-status').style.color = "var(--card-red)";
+  }
+}
+resetMatch();
+
+/* ================= SPINNER ================= */
+var spinCount = 0, lastSpin = -1;
+function spinPrompt(){
+  var box = document.getElementById('spin-result');
+  box.classList.add('rolling');
+  var ticks = 0;
+  var iv = setInterval(function(){
+    var i = Math.floor(Math.random()*prompts.length);
+    box.textContent = prompts[i].s;
+    ticks++;
+    if(ticks > 8){
+      clearInterval(iv);
+      box.classList.remove('rolling');
+      var j;
+      do { j = Math.floor(Math.random()*prompts.length); } while(j === lastSpin);
+      lastSpin = j;
+      box.textContent = "🎤 "+prompts[j].s+"  — finish it out loud!";
+      if(spinCount < 8){
+        spinCount++; addXP(3);
+        document.getElementById('spin-count').textContent = spinCount;
+        if(spinCount === 8){ addGoal(); showToast("🎰 Question Machine complete! Great speaking!"); }
+      }
+    }
+  }, 90);
+}
+
+/* ================= PROMPTS LIST ================= */
+var pw = document.getElementById('prompts');
+prompts.forEach(function(p, i){
+  var d = document.createElement('div');
+  d.className = 'prompt';
+  d.innerHTML = '<p class="starter">🎤 '+p.s+'</p>'+
+    '<button class="btn-outline" onclick="toggleModel('+i+', this)">💡 Show a model answer</button>'+
+    '<div class="model" id="model-'+i+'">✨ '+p.m+'</div>';
+  pw.appendChild(d);
+});
+function toggleModel(i, btn){
+  var m = document.getElementById('model-'+i);
+  m.classList.toggle('show');
+  btn.textContent = m.classList.contains('show') ? '🙈 Hide model answer' : '💡 Show a model answer';
+}
+function toggleModel2(btn, id){
+  var m = document.getElementById(id);
+  m.classList.toggle('show');
+  btn.textContent = m.classList.contains('show') ? '🙈 Hide answer' : '💡 Check answer';
+}
+
+/* ================= MCQ (both stories) ================= */
+function buildMCQ(list, wrapId, prefix, badgeId){
+  var wrap = document.getElementById(wrapId);
+  var state = {correct:0, tries:{}};
+  list.forEach(function(m, qi){
+    var d = document.createElement('div');
+    d.className = 'quiz-q';
+    var html = '<p class="qtext">'+m.q+'</p><div class="options">';
+    m.opts.forEach(function(o, oi){
+      html += '<button data-q="'+qi+'" data-o="'+oi+'">'+String.fromCharCode(65+oi)+') '+o+'</button>';
+    });
+    html += '</div><p class="feedback" id="'+prefix+'-fb-'+qi+'"></p>';
+    d.innerHTML = html;
+    wrap.appendChild(d);
+  });
+  wrap.addEventListener('click', function(e){
+    var btn = e.target.closest('button'); if(!btn) return;
+    var qi = +btn.dataset.q, oi = +btn.dataset.o;
+    var fb = document.getElementById(prefix+'-fb-'+qi);
+    if(state.tries[qi] === 'done') return;
+    var buttons = btn.parentElement.querySelectorAll('button');
+    buttons.forEach(function(b){ b.classList.remove('correct','wrong'); });
+    if(oi === list[qi].a){
+      btn.classList.add('correct');
+      var firstTry = !state.tries[qi];
+      var xp = firstTry ? 10 : 5;
+      state.tries[qi] = 'done';
+      addXP(xp);
+      fb.textContent = firstTry ? "✅ Correct first try! +10 ⭐" : "✅ Correct! +5 ⭐";
+      fb.style.color = "var(--pitch)";
+      state.correct++;
+      if(state.correct === list.length){ addGoal(); winBadge(badgeId); }
+    } else {
+      state.tries[qi] = 'tried';
+      btn.classList.add('wrong');
+      fb.textContent = "❌ Not quite — look at the story and try again! 👀";
+      fb.style.color = "var(--card-red)";
+    }
+  });
+}
+buildMCQ(mcqs, 'mcq', 'q1', 'quiz');
+buildMCQ(mcqs2, 'mcq2', 'q2', 'quiz');
+
+/* ================= SPEAKING QUESTIONS ================= */
+var sw = document.getElementById('speak-qs');
+speakQs.forEach(function(s, i){
+  var d = document.createElement('div');
+  d.className = 'prompt';
+  d.innerHTML = '<p class="starter">'+s.q+'</p>'+
+    '<button class="btn-outline" onclick="revealSpeak('+i+', this)">💡 I answered — check! (+5 ⭐)</button>'+
+    '<div class="model" id="smodel-'+i+'">✨ '+s.m+'</div>';
+  sw.appendChild(d);
+});
+function revealSpeak(i, btn){
+  var m = document.getElementById('smodel-'+i);
+  if(!m.classList.contains('show') && !once['sq'+i]){
+    once['sq'+i] = true; addXP(5);
+  }
+  m.classList.toggle('show');
+  btn.textContent = m.classList.contains('show') ? '🙈 Hide answer' : '💡 Show answer again';
+}
+
+/* ================= SPEECH ================= */
+function speak(word){
+  try{
+    if('speechSynthesis' in window){
+      var u = new SpeechSynthesisUtterance(word);
+      u.lang = 'en-US'; u.rate = 0.85;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+    }
+  }catch(e){}
+}
+
+/* ================= PENALTY GAME ================= */
+var gameGoals = 0, currentBall = null;
+var ballsWrap = document.getElementById('balls');
+gameQs.forEach(function(g, i){
+  var b = document.createElement('div');
+  b.className = 'ball'; b.id = 'ball-'+i;
+  b.innerHTML = '⚽<span style="font-size:.7rem;">'+(i+1)+'</span>';
+  b.onclick = function(){ openBall(i); };
+  ballsWrap.appendChild(b);
+});
+function openBall(i){
+  var b = document.getElementById('ball-'+i);
+  if(b.classList.contains('done')) return;
+  currentBall = i;
+  document.getElementById('gq-text').textContent = "⚽ Challenge "+(i+1)+": "+gameQs[i].q;
+  document.getElementById('gq-hint').textContent = gameQs[i].h;
+  document.getElementById('game-question').classList.add('show');
+  document.getElementById('goal-banner').classList.remove('show');
+  document.getElementById('game-question').scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.getElementById('gq-goal-btn').onclick = function(){
+  if(currentBall === null) return;
+  var b = document.getElementById('ball-'+currentBall);
+  if(!b.classList.contains('done')){
+    b.classList.add('done'); b.innerHTML = '🥅';
+    gameGoals++; addGoal(); addXP(10);
+    document.getElementById('game-goals').textContent = gameGoals;
+  }
+  document.getElementById('game-question').classList.remove('show');
+  var banner = document.getElementById('goal-banner');
+  if(gameGoals === 6){
+    banner.textContent = "🏆 HAT-TRICK HERO! ALL 6 GOALS! 🏆";
+    winBadge('hattrick');
+  } else {
+    banner.textContent = "⚽ GOOOOOAL!!! +10 ⭐ 🎉";
+  }
+  banner.classList.add('show');
+  currentBall = null;
+};
+
+/* ================= ROLEPLAY ================= */
+function togglePractice(id, btn){
+  var p = document.getElementById(id);
+  p.classList.toggle('show');
+  btn.textContent = p.classList.contains('show') ? '🙈 Hide practice' : '🎤 Practice with blanks';
+}
+
+/* ================= CHECKLIST ================= */
+function toggleCheck(li){
+  li.classList.toggle('checked');
+  li.querySelector('.box').textContent = li.classList.contains('checked') ? '✓' : '';
+  var all = document.querySelectorAll('#checklist li').length;
+  var done = document.querySelectorAll('#checklist li.checked').length;
+  var msg = document.getElementById('final-msg');
+  if(all === done){
+    msg.classList.add('show');
+    if(!once['review']){ once['review'] = true; addGoal(); addXP(15); winBadge('fulltime'); }
+  } else { msg.classList.remove('show'); }
+}
+
+/* ================= SENTENCE BUILDER ================= */
+var sbIndex = 0, sbSolved = 0, sbCurrent = [];
+function loadSentence(){
+  var target = document.getElementById('sb-target');
+  var pool = document.getElementById('sb-pool');
+  target.innerHTML = ''; pool.innerHTML = '';
+  document.getElementById('sb-status').textContent = '';
+  document.getElementById('sb-num').textContent = Math.min(sbIndex+1, sentences.length);
+  if(sbIndex >= sentences.length){
+    pool.innerHTML = '<p style="font-weight:bold;color:var(--purple);">🎉 All sentences complete! You are a Sentence Star!</p>';
+    return;
+  }
+  sbCurrent = sentences[sbIndex];
+  shuffle(sbCurrent).forEach(function(w){
+    var c = document.createElement('span');
+    c.className = 'sb-word'; c.textContent = w;
+    c.onclick = function(){
+      if(c.parentElement.id === 'sb-pool'){ target.appendChild(c); }
+      else { pool.appendChild(c); }
+    };
+    pool.appendChild(c);
+  });
+}
+function clearSentence(){
+  var target = document.getElementById('sb-target');
+  var pool = document.getElementById('sb-pool');
+  Array.prototype.slice.call(target.children).forEach(function(c){ pool.appendChild(c); });
+  document.getElementById('sb-status').textContent = '';
+}
+function checkSentence(){
+  var st = document.getElementById('sb-status');
+  var words = Array.prototype.map.call(document.getElementById('sb-target').children, function(c){ return c.textContent; });
+  if(sbIndex >= sentences.length) return;
+  if(words.length < sbCurrent.length){
+    st.textContent = "🤔 Use all the words first!";
+    st.style.color = "var(--card-red)"; return;
+  }
+  if(words.join(' ') === sbCurrent.join(' ')){
+    sbSolved++; addXP(10);
+    document.getElementById('sb-solved').textContent = sbSolved;
+    st.textContent = "✅ Perfect! Now read it out loud: \""+sbCurrent.join(' ')+".\" 🎤 +10 ⭐";
+    st.style.color = "var(--pitch)";
+    sbIndex++;
+    if(sbSolved === sentences.length){ addGoal(); winBadge('builder'); }
+    setTimeout(loadSentence, 2200);
+  } else {
+    st.textContent = "❌ Almost! Check the word order and try again.";
+    st.style.color = "var(--card-red)";
+  }
+}
+loadSentence();
+
+/* ================= WORD SCRAMBLE ================= */
+var scrIndex = 0, scrSolved = 0;
+function scrambleWord(w){
+  var mixed = w;
+  var guard = 0;
+  while(mixed === w && guard < 20){ mixed = shuffle(w.split('')).join(''); guard++; }
+  return mixed;
+}
+function loadScramble(){
+  var st = document.getElementById('scr-status');
+  st.textContent = '';
+  document.getElementById('scr-input').value = '';
+  document.getElementById('scr-num').textContent = Math.min(scrIndex+1, scrambles.length);
+  if(scrIndex >= scrambles.length){
+    document.getElementById('scr-word').textContent = "🎉 DONE!";
+    document.getElementById('scr-clue').textContent = "All words solved — Spell Champ!";
+    return;
+  }
+  document.getElementById('scr-clue').textContent = "Clue: "+scrambles[scrIndex].c;
+  document.getElementById('scr-word').textContent = scrambleWord(scrambles[scrIndex].w);
+}
+function checkScramble(){
+  if(scrIndex >= scrambles.length) return;
+  var st = document.getElementById('scr-status');
+  var val = document.getElementById('scr-input').value.trim().toUpperCase();
+  if(val === scrambles[scrIndex].w){
+    scrSolved++; addXP(8);
+    document.getElementById('scr-solved').textContent = scrSolved;
+    st.textContent = "✅ Yes! It's \""+scrambles[scrIndex].w+"\". Say it out loud 2 times! 🎤 +8 ⭐";
+    st.style.color = "var(--pitch)";
+    speak(scrambles[scrIndex].w.toLowerCase());
+    scrIndex++;
+    if(scrSolved === scrambles.length){ addGoal(); winBadge('scramble'); }
+    setTimeout(loadScramble, 2000);
+  } else {
+    st.textContent = "❌ Not yet — look at the clue and try again!";
+    st.style.color = "var(--card-red)";
+  }
+}
+function scrambleHint(){
+  if(scrIndex >= scrambles.length) return;
+  var st = document.getElementById('scr-status');
+  st.textContent = "💡 It starts with \""+scrambles[scrIndex].w[0]+"\"";
+  st.style.color = "var(--purple)";
+}
+document.getElementById('scr-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkScramble();
+});
+loadScramble();
+
+/* ================= MEMORY MATCH ================= */
+var memFirst = null, memLock = false, memFound = 0;
+function buildMemory(){
+  memFirst = null; memLock = false; memFound = 0;
+  var grid = document.getElementById('mem-grid');
+  grid.innerHTML = '';
+  document.getElementById('mem-status').textContent = '';
+  var cards = [];
+  memPairs.forEach(function(p, i){
+    cards.push({t:p[0], k:i}); cards.push({t:p[1], k:i});
+  });
+  shuffle(cards).forEach(function(c){
+    var d = document.createElement('div');
+    d.className = 'mem-card'; d.dataset.key = c.k; d.dataset.text = c.t;
+    d.textContent = '❓';
+    d.onclick = function(){ flipMem(d); };
+    grid.appendChild(d);
+  });
+}
+function flipMem(d){
+  if(memLock || d.classList.contains('flip') || d.classList.contains('found')) return;
+  d.classList.add('flip'); d.textContent = d.dataset.text;
+  if(!memFirst){ memFirst = d; return; }
+  var a = memFirst; memFirst = null;
+  if(a.dataset.key === d.dataset.key && a !== d){
+    a.classList.remove('flip'); d.classList.remove('flip');
+    a.classList.add('found'); d.classList.add('found');
+    memFound++; addXP(5);
+    document.getElementById('mem-status').textContent = "✅ Pair "+memFound+"/6! Say the English word! 🎤 +5 ⭐";
+    document.getElementById('mem-status').style.color = "var(--pitch)";
+    if(memFound === 6){
+      addGoal(); winBadge('memory');
+      document.getElementById('mem-status').textContent = "🏆 Memory Master! All pairs found!";
+    }
+  } else {
+    memLock = true;
+    setTimeout(function(){
+      a.classList.remove('flip'); a.textContent = '❓';
+      d.classList.remove('flip'); d.textContent = '❓';
+      memLock = false;
+    }, 900);
+  }
+}
+buildMemory();
+
+/* ================= SPEED SPEAK ================= */
+var speedDone = 0, speedRunning = false;
+function startSpeed(){
+  if(speedRunning) return;
+  if(speedDone >= 3){ showToast("🔥 You finished all 3 Speed Speak challenges!"); return; }
+  speedRunning = true;
+  var topic = speedTopics[speedDone];
+  document.getElementById('speed-prompt').textContent = topic;
+  var t = 30;
+  var timerEl = document.getElementById('speed-timer');
+  var btn = document.getElementById('speed-btn');
+  btn.textContent = "🗣️ SPEAK NOW!";
+  timerEl.textContent = t;
+  var iv = setInterval(function(){
+    t--;
+    timerEl.textContent = t;
+    if(t <= 0){
+      clearInterval(iv);
+      speedRunning = false;
+      speedDone++; addXP(15); addGoal();
+      document.getElementById('speed-done').textContent = speedDone;
+      document.getElementById('speed-prompt').textContent = "⏱️ TIME! Amazing speaking! +15 ⭐";
+      btn.textContent = speedDone >= 3 ? "🏆 ALL DONE!" : "▶ NEXT TOPIC!";
+      timerEl.textContent = "🎉";
+      if(speedDone === 3) winBadge('speed');
+      confetti();
+    }
+  }, 1000);
+}
+</script>
+</body>
+</html>
